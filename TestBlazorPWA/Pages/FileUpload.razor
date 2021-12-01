@@ -1,0 +1,76 @@
+﻿@page "/fileupload"
+@using System.IO
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Logging
+@inject ILogger<FileUpload> Logger
+@inject IJSRuntime JsRuntime
+
+<h3>Upload Files</h3>
+
+<p>
+    <label>
+        Select Image:
+        <InputFile OnChange="@LoadFiles" capture />
+    </label>
+</p>
+
+@if (isLoading)
+{
+    <p>Uploading...</p>
+}
+else
+{
+    <ul style="width: 100%">
+        @foreach (var file in loadedFiles)
+        {
+            <li>
+                <ul>
+                    <li>Name: @file.Name</li>
+                    <li>Last modified: @file.LastModified.ToString()</li>
+                    <li>Size (bytes): @file.Size</li>
+                    <li>Content type: @file.ContentType</li>
+                </ul>
+            </li>
+
+        }
+    </ul>
+    <img src="@(LastImageStr)" style="width: 100%"/>
+}
+
+@code {
+    private List<IBrowserFile> loadedFiles = new();
+    private bool isLoading;
+    public string LastImageStr { get; set; } = string.Empty;
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        isLoading = true;
+        loadedFiles.Clear();
+
+        foreach (var file in e.GetMultipleFiles(1))
+        {
+            try
+            {
+                loadedFiles.Add(file);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("File: {Filename} Error: {Error}", 
+                    file.Name, ex.Message);
+            }
+        }
+
+        LastImageStr = await StreamToImage(loadedFiles.LastOrDefault()?.OpenReadStream(long.MaxValue));
+        isLoading = false;
+    }
+
+    public async Task<string> StreamToImage(Stream? stream)
+    {
+        if (stream is null) return string.Empty;
+        var fileContent = new StreamContent(stream);
+        var byteArray= await fileContent.ReadAsByteArrayAsync();
+        var base64 = Convert.ToBase64String(byteArray);
+        var imgSrc = $"data:image/png;base64,{base64}";
+        return imgSrc;
+    }
+}
