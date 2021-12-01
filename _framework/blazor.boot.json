@@ -76,7 +76,7 @@
       "System.Text.Json.dll": "sha256-HscE\/DWmS3fSLuRvDQDjjn2tbtGl8SVAPFsLfGIphes=",
       "System.Text.RegularExpressions.dll": "sha256-ULFgcKSZBuZ0rNhExa8fQf9bHrgkpXBsgQkZkyHPhj4=",
       "System.Threading.Tasks.dll": "sha256-OeR5XM+nw6UORdlB4FFsZO\/YFqaxQiazr2Rd9AL2FUs=",
-      "TestBlazorPWA.dll": "sha256-zZRcxPyf4cbCJ7pGAGzNIWUys0DRkY5Hivm0wbmGeLE="
+      "TestBlazorPWA.dll": "sha256-2xG2nIRRmNdT+1Ou2lPHuODvjG7D80Ax5pv+aneuggY="
     },
     "extensions": null,
     "lazyAssembly": null,
